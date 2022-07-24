@@ -1,8 +1,9 @@
 {
-    "name": "app_name",
+    "name": "create-node-ts-starter-rush",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "bin": "./bin/cli.js",
     "scripts": {
         "build": "tsc",
         "dev": "ts-node-dev --respawn src/index.ts",

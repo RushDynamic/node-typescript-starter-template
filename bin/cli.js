@@ -3,13 +3,13 @@
 const { execSync } = require('child_process');
 
 const runCmd = (cmd) => {
-  try {
-    execSync(`${cmd}`, { stdio: 'inherit' });
-    return true;
-  } catch (e) {
-    console.log(`An exception occurred while running cmd: ${cmd}: ${e.getMessage()}`);
-    return false;
-  }
+    try {
+        execSync(`${cmd}`, { stdio: 'inherit' });
+        return true;
+    } catch (e) {
+        console.log(`An exception occurred while running cmd: ${cmd}: ${e.getMessage()}`);
+        return false;
+    }
 };
 
 const repoName = process.argv[2];
