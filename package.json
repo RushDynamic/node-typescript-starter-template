@@ -1,7 +1,7 @@
 {
     "name": "create-node-ts-starter-rush",
     "version": "1.0.1",
-    "description": "",
+    "description": "A TypeScript starter that is pre-configured with ESLint and Prettier using the AirBnB style guide",
     "main": "index.js",
     "bin": "./bin/cli.js",
     "scripts": {
