@@ -1,6 +1,6 @@
 {
     "name": "create-node-ts-starter-rush",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "A TypeScript starter that is pre-configured with ESLint and Prettier using the AirBnB style guide",
     "main": "app.js",
     "bin": "./bin/cli.js",
@@ -20,7 +20,7 @@
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-prettier": "^4.2.1",
         "prettier": "^2.7.1",
-        "ts-node": "^2.0.0",
+        "ts-node": "^10.9.1",
         "nodemon": "^2.0.19",
         "typescript": "^4.7.4"
     }
