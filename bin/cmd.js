@@ -1,11 +1,11 @@
 const { execSync } = require('child_process');
+const { readFileSync, writeFileSync } = require('node:fs');
 
-const runCommand = (cmd) => {
+const runNativeCommand = (cmd) => {
     try {
         execSync(`${cmd}`, { stdio: 'inherit' });
         return true;
     } catch (e) {
-        console.error(`An exception occurred while running cmd: ${cmd}: ${e.message}`);
         return false;
     }
 };
@@ -13,27 +13,68 @@ const runCommand = (cmd) => {
 const getCommands = (repoName) => [
     {
         cmd: `git clone --depth 1 https://github.com/RushDynamic/node-typescript-starter-template ${repoName}`,
-        msg: '\nCloning starter template repo'
+        msg: 'Cloning starter template repo',
+        native: true
+    },
+    {
+        cmd: () => {
+            let content = JSON.parse(readFileSync(`${repoName}/package.json`));
+            content.name = repoName;
+            content.version = '1.0.0';
+            ['description', 'bin', 'author'].forEach((key) => delete content[key]);
+            writeFileSync(`${repoName}/package.json`, JSON.stringify(content));
+        },
+        msg: 'Updating package.json'
     },
     {
         cmd: `cd ${repoName} && rm -rf .git`,
-        msg: "\nRemoving template's .git directory"
+        msg: "Removing template's .git directory",
+        native: true
     },
     {
         cmd: `cd ${repoName} && rm -rf bin`,
-        msg: '\nCleaning up template files'
+        msg: 'Cleaning up template files',
+        native: true
     },
     {
         cmd: `cd ${repoName} && npm install --include=dev`,
-        msg: '\nInstalling dependencies'
+        msg: 'Installing dependencies',
+        native: true
     }
 ];
 
+const attemptRollback = (repoName) => {
+    try {
+        console.log('\nAttempting to remove partial setup files');
+        if (runNativeCommand(`rm -rf ${repoName}`)) {
+            console.log('Rollback successful');
+        } else {
+            console.error('Rollback failed');
+        }
+    } catch (e) {
+        // Nothing to handle
+    } finally {
+        process.exit(-1);
+    }
+};
+
 const executeCommands = (repoName) => {
-    getCommands(repoName).forEach((command) => {
-        console.log(command.msg);
-        if (!runCommand(command.cmd)) {
-            process.exit(-1);
+    getCommands(repoName).forEach((command, idx, arr) => {
+        try {
+            console.log(`[${idx + 1}/${arr?.length}] ${command.msg}`);
+            if (command.native) {
+                if (!runNativeCommand(command.cmd)) {
+                    throw { message: 'Native command execution failed' };
+                }
+            } else {
+                command.cmd();
+            }
+            console.log('\n');
+        } catch (e) {
+            console.error(
+                `An exception occurred on step ${idx + 1}: ${command.msg?.trim()} => ${e.message}`
+            );
+            attemptRollback(repoName);
         }
     });
 };
