@@ -32,6 +32,13 @@ const getCommands = (repoName) => [
         native: true
     },
     {
+        cmd: () => {
+            let content = readFileSync(`${repoName}/bin/README.md`, 'utf-8');
+            writeFileSync(`${repoName}/README.md`, content.replace('{app-name}', `${repoName}`));
+        },
+        msg: 'Adding default README'
+    },
+    {
         cmd: `cd ${repoName} && rm -rf bin`,
         msg: 'Cleaning up template files',
         native: true
