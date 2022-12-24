@@ -12,6 +12,10 @@ const ascii = `
 console.log(ascii);
 
 const repoName = process.argv[2];
+if (!repoName) {
+    console.error('Please enter a valid project name.');
+    process.exit(-1);
+}
 executeCommands(repoName);
 
 console.log("\nSetup successful, be sure to update package.json with your app's information.");
